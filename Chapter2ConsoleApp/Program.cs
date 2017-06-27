@@ -23,7 +23,7 @@ namespace Chapter2ConsoleApp
             //VariousMethods();
             //MergeOptionExample();
             //ExecuteOption();
-            MergeOptionExampleObjectSet();
+            ExecuteOption();
         }
 
         private static void QueryContacts()
@@ -364,7 +364,7 @@ namespace Chapter2ConsoleApp
             using (var context = new SampleEntities())
             {
                 var list = context.ContactsObjectSet.Execute(MergeOption.NoTracking).ToList();
-                context.GetObjectByKey()
+                
                 foreach (var address in list)
                 {
                     Console.WriteLine(address.FirstName);
