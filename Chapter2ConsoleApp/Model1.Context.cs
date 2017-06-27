@@ -7,26 +7,39 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.Data.Entity.Core.Objects;
+
 namespace Chapter2ConsoleApp
 {
-    using System;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
-    
-    public partial class SampleEntities : DbContext
+
+    public partial class SampleEntities : ObjectContext
     {
         public SampleEntities(string connString = "name=SampleEntities")
             : base(connString)
         {
         }
-    
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            throw new UnintentionalCodeFirstException();
-        }
-    
+
+     
+
         public DbSet<Address> Addresses { get; set; }
+
         public DbSet<Contact> Contacts { get; set; }
+
+        private ObjectSet<Contact> _contacts;
+
+        public ObjectSet<Contact> ContactsObjectSet
+        {
+            get
+            {
+                if (_contacts == null)
+                {
+                    _contacts = base.CreateObjectSet<Contact>();
+                }
+                return _contacts;
+            }
+        }
+
         public DbSet<sysdiagram> sysdiagrams { get; set; }
         public DbSet<vOfficeAddress> vOfficeAddresses { get; set; }
     }

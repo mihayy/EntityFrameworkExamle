@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Objects;
+using System.Data.Entity.Core;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 
 namespace Chapter2ConsoleApp
@@ -18,7 +20,10 @@ namespace Chapter2ConsoleApp
             //CreateEntity();
             //reateParentChildEntity();
             //RemoveEnitiy();
-            VariousMethods();
+            //VariousMethods();
+            //MergeOptionExample();
+            //ExecuteOption();
+            MergeOptionExampleObjectSet();
         }
 
         private static void QueryContacts()
@@ -315,6 +320,55 @@ namespace Chapter2ConsoleApp
                 
                 var list = contacts.ToList();
                 Console.WriteLine(contacts.ToString());
+                Console.ReadLine();
+            }
+        }
+        private static void MergeOptionExample()
+        {
+            using (var context = new SampleEntities())
+            {
+                var ctx = ((IObjectContextAdapter) context).ObjectContext.CreateObjectSet<Contact>();
+                
+                var contactsQuery = ctx.Select(m => m);
+                ((ObjectQuery) contactsQuery).MergeOption = MergeOption.NoTracking;
+                var list = contactsQuery.ToList();
+
+                foreach (var address in list)
+                {
+                    Console.WriteLine(address.FirstName);
+                }
+
+                Console.ReadLine();
+            }
+        }
+
+        private static void MergeOptionExampleObjectSet()
+        {
+            using (var context = new SampleEntities())
+            {
+                var contactsQuery = context.ContactsObjectSet.Where(c => c.FirstName == "Robert");
+                ((ObjectQuery)contactsQuery).MergeOption = MergeOption.PreserveChanges;
+                var results = contactsQuery.ToList();
+
+                foreach (var address in results)
+                {
+                    Console.WriteLine(address.FirstName);
+                }
+
+                Console.ReadLine();
+            }
+        }
+
+        private static void ExecuteOption()
+        {
+            using (var context = new SampleEntities())
+            {
+                var list = context.ContactsObjectSet.Execute(MergeOption.NoTracking).ToList();
+                context.GetObjectByKey()
+                foreach (var address in list)
+                {
+                    Console.WriteLine(address.FirstName);
+                }
                 Console.ReadLine();
             }
         }
